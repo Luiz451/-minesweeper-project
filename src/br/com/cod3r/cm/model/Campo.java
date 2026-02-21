@@ -93,17 +93,17 @@ public class Campo {
         return coluna;
     }
 
-    boolean obetivoAlcancado() {
+    public boolean objetivoAlcancado() {
         boolean desvendado = !minado && aberto;
-        boolean protegido = minado && marcado;
+        boolean protegido = marcado && (minado || vizinhancaSegura());
         return desvendado || protegido;
     }
 
-    long minasNaVizinhanca() {
+    public long minasNaVizinhanca() {
         return vizinhos.stream().filter(v -> v.minado).count();
     }
 
-    void reiniciar() {
+    public void reiniciar() {
         aberto = false;
         minado = false;
         marcado = false;
