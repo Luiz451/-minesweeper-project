@@ -113,7 +113,7 @@ class CampoTeste {
         campo.adicionarVizinho(campo22);
         campo.abrir();
 
-        assertFalse(campo22.isAberto() && campo11.isAberto());
+        assertTrue(campo22.isAberto() && campo11.isAberto());
     }
 
     @Test
@@ -132,4 +132,27 @@ class CampoTeste {
 
         assertFalse(campo22.isAberto() && campo11.isFechado());
     }
+
+    @Test
+    void testeGetLinhaEGetColuna() {
+        assertEquals(campo.getLinha(), 3);
+        assertEquals(campo.getColuna(), 3);
+    }
+
+    @Test
+    void testeObjetivoAlcancadoDesvendado() {
+        Campo campo1 = new Campo(1, 1);
+        campo1.abrir();
+        assertTrue(campo1.objetivoAlcancado());
+    }
+
+    @Test
+    void testeObjetivoAlcancadoProtegido() {
+        Campo campo1 = new Campo(1, 1);
+        campo1.minar();
+        campo1.alternarMarcacao();
+        assertTrue(campo1.objetivoAlcancado());
+    }
+
+
 }
