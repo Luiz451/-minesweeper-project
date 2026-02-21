@@ -1,4 +1,4 @@
-package campo_minado.test.model;
+package campo_minado.test.br.com.cod3r.cm.model;
 
 import campo_minado.src.br.com.cod3r.cm.model.Campo;
 import org.junit.jupiter.api.BeforeEach;
