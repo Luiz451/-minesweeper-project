@@ -1,5 +1,7 @@
 package campo_minado.src.br.com.cod3r.cm.model;
 
+import campo_minado.src.br.com.cod3r.cm.exception.ExplosaoException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +30,42 @@ public class Campo {
         int deltaColuna = Math.abs(this.coluna - vizinho.coluna);
         int deltaGeral = deltaColuna + deltaLinha;
 
-        if (deltaGeral == 1 && !diagonal) {
+        if(deltaGeral == 1 && !diagonal) {
             this.vizinhos.add(vizinho);
             return true;
-        } else if (deltaGeral == 2 && diagonal) {
+        } else if(deltaGeral == 2 && diagonal) {
             this.vizinhos.add(vizinho);
             return true;
         } else {
             return false;
         }
+    }
+
+    void alternarMarcacao() {
+        if(!aberto) {
+            marcado = !marcado;
+        }
+    }
+
+    boolean abrir() {
+        if(!aberto && !marcado) {
+            aberto = true;
+
+            if(minado) {
+                throw new ExplosaoException();
+            }
+
+            if(vizinhancaSegura()) {
+                vizinhos.forEach(v -> v.abrir());
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    boolean vizinhancaSegura() {
+        return vizinhos.stream().noneMatch(v -> v.minado);
     }
 }
