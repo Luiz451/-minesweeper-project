@@ -2,6 +2,7 @@ package campo_minado.src.br.com.cod3r.cm.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Tabuleiro {
 
@@ -38,5 +39,54 @@ public class Tabuleiro {
     }
 
     private void sortearMinas() {
+        long minasArmadas = 0;
+        Predicate<Campo> minado = c -> c.isMarcado();
+        while(minasArmadas < minas) {
+            int aleatorio = (int) (Math.random() * campos.size());
+            campos.get(aleatorio).minar();
+
+            minasArmadas = campos.stream()
+                    .filter(minado)
+                    .count();
+        }
+    }
+
+    public boolean objetivoAlcancado() {
+        return campos.stream()
+                .allMatch(c -> c.objetivoAlcancado());
+    }
+
+    public void reiniciarTabuleiro() {
+        campos.stream()
+                .forEach(c -> c.reiniciar());
+        sortearMinas();
+    }
+
+    public void adicionarCampo(Campo campo) {
+        campos.add(campo);
+    }
+
+    public void abrir(int linha, int coluna) {
+        int linhaInterna = linha - 1;
+        int colunaInterna = coluna - 1;
+
+        campos.stream()
+                .filter(c -> c.getLinha() == linhaInterna && c.getColuna() == colunaInterna)
+                .findFirst()
+                .ifPresent(c -> c.abrir());
+    }
+
+    public void alternarMarcacao(int linha, int coluna) {
+        int linhaInterna = linha - 1;
+        int colunaInterna = coluna - 1;
+
+        campos.stream()
+                .filter(c -> c.getLinha() == linhaInterna && c.getColuna() == colunaInterna)
+                .findFirst()
+                .ifPresent(c -> c.alternarMarcacao());
+    }
+
+    public String toString() {
+        return "";
     }
 }
