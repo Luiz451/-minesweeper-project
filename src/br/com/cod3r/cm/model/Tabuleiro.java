@@ -22,50 +22,6 @@ public class Tabuleiro {
         sortearMinas();
     }
 
-    private void gerarCampos() {
-        for (int l = 0; l < linhas; l++) {
-            for (int c = 0; c < colunas; c++) {
-                campos.add(new Campo(l, c));
-            }
-        }
-    }
-
-    private void associarVizinhos() {
-        for (Campo c1: campos) {
-            for (Campo c2: campos) {
-                c1.adicionarVizinho(c2);
-            }
-        }
-    }
-
-    private void sortearMinas() {
-        long minasArmadas = 0;
-        Predicate<Campo> minado = c -> c.isMarcado();
-        while(minasArmadas < minas) {
-            int aleatorio = (int) (Math.random() * campos.size());
-            campos.get(aleatorio).minar();
-
-            minasArmadas = campos.stream()
-                    .filter(minado)
-                    .count();
-        }
-    }
-
-    public boolean objetivoAlcancado() {
-        return campos.stream()
-                .allMatch(c -> c.objetivoAlcancado());
-    }
-
-    public void reiniciarTabuleiro() {
-        campos.stream()
-                .forEach(c -> c.reiniciar());
-        sortearMinas();
-    }
-
-    public void adicionarCampo(Campo campo) {
-        campos.add(campo);
-    }
-
     public void abrir(int linha, int coluna) {
         int linhaInterna = linha - 1;
         int colunaInterna = coluna - 1;
@@ -86,7 +42,74 @@ public class Tabuleiro {
                 .ifPresent(c -> c.alternarMarcacao());
     }
 
+    public boolean objetivoAlcancado() {
+        return campos.stream()
+                .allMatch(c -> c.objetivoAlcancado());
+    }
+
+    public void reiniciarTabuleiro() {
+        campos.stream()
+                .forEach(c -> c.reiniciar());
+        sortearMinas();
+    }
+
+    public void adicionarCampo(Campo campo) {
+        campos.add(campo);
+    }
+
+    private void gerarCampos() {
+        for (int l = 0; l < linhas; l++) {
+            for (int c = 0; c < colunas; c++) {
+                campos.add(new Campo(l, c));
+            }
+        }
+    }
+
+    private void associarVizinhos() {
+        for (Campo c1: campos) {
+            for (Campo c2: campos) {
+                c1.adicionarVizinho(c2);
+            }
+        }
+    }
+
+    private void sortearMinas() {
+        long minasArmadas = 0;
+        Predicate<Campo> minado = c -> c.isMinado();
+
+        while(minasArmadas < minas) {
+            int aleatorio = (int) (Math.random() * campos.size());
+            campos.get(aleatorio).minar();
+
+            minasArmadas = campos.stream().filter(minado).count();
+        }
+    }
+
     public String toString() {
-        return "";
+        StringBuilder s = new StringBuilder();
+
+        s.append("   ");
+        for (int c = 0; c < colunas; c++) {
+            s.append(" ");
+            s.append(c + 1);
+            s.append(" ");
+        }
+        s.append("\n");
+
+        int i = 0;
+        for (int l = 0; l < linhas; l++) {
+            s.append(" ");
+            s.append(l + 1);
+            s.append(" ");
+
+            for (int c = 0; c < colunas; c++) {
+                s.append(" ");
+                s.append(campos.get(i));
+                s.append(" ");
+                i++;
+            }
+            s.append("\n");
+        }
+        return s.toString();
     }
 }
