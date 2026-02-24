@@ -11,6 +11,7 @@ public class Tabuleiro {
     private int linhas;
     private int colunas;
     private int minas;
+    private boolean primeiroMovimento = true;
 
     private final List<Campo> campos = new ArrayList<>();
 
@@ -21,12 +22,16 @@ public class Tabuleiro {
 
         gerarCampos();
         associarVizinhos();
-        sortearMinas();
     }
 
     public void abrir(int linha, int coluna) {
         int linhaInterna = linha - 1;
         int colunaInterna = coluna - 1;
+
+        if(primeiroMovimento) {
+            sortearMinas(linhaInterna, colunaInterna);
+            primeiroMovimento = false;
+        }
 
         try {
             campos.stream()
@@ -57,7 +62,6 @@ public class Tabuleiro {
     public void reiniciarTabuleiro() {
         campos.stream()
                 .forEach(c -> c.reiniciar());
-        sortearMinas();
     }
 
     public void adicionarCampo(Campo campo) {
@@ -80,15 +84,19 @@ public class Tabuleiro {
         }
     }
 
-    private void sortearMinas() {
-        long minasArmadas = 0;
-        Predicate<Campo> minado = c -> c.isMinado();
+    private void sortearMinas(int linhaSegura, int colunaSegura) {
+        int minasArmadas = 0;
 
         while(minasArmadas < minas) {
             int aleatorio = (int) (Math.random() * campos.size());
-            campos.get(aleatorio).minar();
+            Campo campoSorteado = campos.get(aleatorio);
 
-            minasArmadas = campos.stream().filter(minado).count();
+            if(campoSorteado.getLinha() != linhaSegura || campoSorteado.getColuna() != colunaSegura) {
+
+                if(campoSorteado.minar()) {
+                    minasArmadas++;
+                }
+            }
         }
     }
 

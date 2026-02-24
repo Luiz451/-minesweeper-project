@@ -70,8 +70,11 @@ public class Campo {
                 .noneMatch(v -> v.minado);
     }
 
-    public void minar() {
-        minado = true;
+    public boolean minar() {
+        if(!minado) {
+            minado = true;
+        }
+        return false;
     }
 
     public boolean isMinado() {
