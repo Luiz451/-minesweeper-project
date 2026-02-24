@@ -1,5 +1,7 @@
 package campo_minado.src.br.com.cod3r.cm.model;
 
+import campo_minado.src.br.com.cod3r.cm.exception.ExplosaoException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -26,10 +28,15 @@ public class Tabuleiro {
         int linhaInterna = linha - 1;
         int colunaInterna = coluna - 1;
 
-        campos.stream()
-                .filter(c -> c.getLinha() == linhaInterna && c.getColuna() == colunaInterna)
-                .findFirst()
-                .ifPresent(c -> c.abrir());
+        try {
+            campos.stream()
+                    .filter(c -> c.getLinha() == linhaInterna && c.getColuna() == colunaInterna)
+                    .findFirst()
+                    .ifPresent(c -> c.abrir());
+        } catch (ExplosaoException e) {
+            campos.forEach(c -> c.setAberto(true));
+            throw e;
+        }
     }
 
     public void alternarMarcacao(int linha, int coluna) {
