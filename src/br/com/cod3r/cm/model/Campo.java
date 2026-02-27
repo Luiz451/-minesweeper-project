@@ -73,6 +73,7 @@ public class Campo {
     public boolean minar() {
         if(!minado) {
             minado = true;
+            return true;
         }
         return false;
     }

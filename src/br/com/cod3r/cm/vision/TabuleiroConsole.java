@@ -55,10 +55,12 @@ public class TabuleiroConsole {
 
                     digitado = capturarValorDigitado("1- Abrir ou 2 - ((Des)Marcar: ");
 
-                    if("1".equalsIgnoreCase(digitado)) {
+                    if("1".equalsIgnoreCase(digitado.trim())) {
                         tabuleiro.abrir(xy.next(), xy.next());
-                    } else if("2".equalsIgnoreCase(digitado)) {
+                    } else if("2".equalsIgnoreCase(digitado.trim())) {
                         tabuleiro.alternarMarcacao(xy.next(), xy.next());
+                    } else {
+                        System.out.println("Opção inválida! Tente novamente.");
                     }
             }
             System.out.println(tabuleiro);
@@ -70,7 +72,7 @@ public class TabuleiroConsole {
     }
 
     private String capturarValorDigitado(String texto) {
-        System.out.println(texto);
+        System.out.print(texto);
         String digitado = entrada.nextLine();
 
         if("sair".equalsIgnoreCase(digitado)) {
